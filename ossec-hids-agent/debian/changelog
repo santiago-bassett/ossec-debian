@@ -1,0 +1,5 @@
+ossec-hids-agent (2.8-1) stable; urgency=low
+
+  * Initial release.
+
+ -- Santiago Bassett <santiago.bassett@gmail.com>  Thu, 19 Jun 2014 03:11:44 +0000
