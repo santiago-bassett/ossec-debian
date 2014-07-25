@@ -25,4 +25,4 @@ For more details on how to create Debian Packages and an APT repository you can 
 
 http://santi-bassett.blogspot.com/2014/07/setting-up-apt-repository-with-reprepro.html
 
-Please don't hesitate to contribute (preferable via pull requests) to improve these packages.
+Please don't hesitate to contribute (preferably via pull requests) to improve these packages.
