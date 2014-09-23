@@ -1,6 +1,8 @@
 #!/bin/sh
 # postrm script for ossec-hids
-# modified by Santiago Bassett 03/25/2014
+# Santiago Bassett <santiago.bassett@gmail.com>
+# 03/25/2014
+
 
 set -e
 

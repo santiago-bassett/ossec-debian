@@ -1,6 +1,7 @@
 #!/bin/sh
-# postinst script for ossec-hids-agent
-# modified by Santiago Bassett 03/25/2014
+# postinst script for ossec-hids
+# Santiago Bassett <santiago.bassett@gmail.com>
+# 03/25/2014
 
 set -e
 
@@ -97,9 +98,20 @@ case "$1" in
         chown root:${GROUP} ${DIR}/etc/ossec.conf
         chmod 440 ${DIR}/etc/ossec.conf
 
+	# Debconf
+	. /usr/share/debconf/confmodule
+	db_input high ossec-hids-agent/server-ip || true
+	db_go || true
+
+	db_get ossec-hids-agent/server-ip
+	SERVER_IP=$RET
+
+	sed -i "s/<server-ip>[^<]\+<\/server-ip>/<server-ip>${SERVER_IP}<\/server-ip>/" ${DIR}/etc/ossec.conf
+	db_stop
+
+	# Service
 	if [ -x /etc/init.d/ossec ]; then
 	    update-rc.d -f ossec defaults
-	    invoke-rc.d ossec restart
 	fi
 
 	if [ -d ${OSSEC_HIDS_TMP_DIR} ]; then

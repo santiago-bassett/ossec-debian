@@ -1,6 +1,5 @@
 #!/bin/sh
 # postinst script for ossec-hids
-# modified by Santiago Bassett 03/25/2014
 
 set -e
 
@@ -96,7 +95,6 @@ case "$1" in
 	    cp -pr ${DIR}/rules/*.xml ${DIR}/rules/backup-rules.$$/
 	fi
 
-
 	# restore the local rules
 	if [ -f ${OSSEC_HIDS_TMP_DIR}/local_rules.xml ]; then
 	    mv ${OSSEC_HIDS_TMP_DIR}/local_rules.xml ${DIR}/rules/local_rules.xml
@@ -152,15 +150,48 @@ case "$1" in
 	chown root:${GROUP} ${DIR}/etc/ossec.conf
 	chmod 440 ${DIR}/etc/ossec.conf
 
+	# Debconf
+	. /usr/share/debconf/confmodule
+	db_input high ossec-hids/email_notification || true
+	db_go || true
+
+	db_get ossec-hids/email_notification
+	EMAIL_NOTIFICATION=$RET
+
+	if [ ${EMAIL_NOTIFICATION} = "yes" ]; then
+	    sed -i 's/<email_notification>[^<]\+<\/email_notification>/<email_notification>yes<\/email_notification>/' ${DIR}/etc/ossec.conf 
+	    db_input high ossec-hids/email_to || true
+	    db_input high ossec-hids/email_from || true
+	    db_input high ossec-hids/smtp_server || true
+	    db_go || true
+
+	    db_get ossec-hids/email_to
+	    EMAIL_TO=$RET
+	    db_get ossec-hids/email_from
+	    EMAIL_FROM=$RET
+	    db_get ossec-hids/smtp_server
+	    SMTP_SERVER=$RET
+
+	    sed -i "s/<email_to>[^<]\+<\/email_to>/<email_to>${EMAIL_TO}<\/email_to>/" ${DIR}/etc/ossec.conf 
+	    sed -i "s/<email_from>[^<]\+<\/email_from>/<email_from>${EMAIL_FROM}<\/email_from>/" ${DIR}/etc/ossec.conf 
+	    sed -i "s/<smtp_server>[^<]\+<\/smtp_server>/<smtp_server>${SMTP_SERVER}<\/smtp_server>/" ${DIR}/etc/ossec.conf 
+	
+    	else
+	    sed -i 's/<email_notification>[^<]\+<\/email_notification>/<email_notification>no<\/email_notification>/' ${DIR}/etc/ossec.conf
+	fi
+
+	db_stop
+
+	# Service
 	if [ -x /etc/init.d/ossec ]; then
 	    update-rc.d -f ossec defaults
-	    invoke-rc.d ossec restart
+	    service ossec restart
 	fi
 
 	if [ -d ${OSSEC_HIDS_TMP_DIR} ]; then
 	    rm -r ${OSSEC_HIDS_TMP_DIR}
 	fi
-    
+  
     ;;
 
 

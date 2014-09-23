@@ -1,5 +1,13 @@
+ossec-hids-agent (2.8-2) stable; urgency=low
+
+  * Fixed Makefile to use ossec-hids-debian.init instead of ossec-hids.init (fixes LSB headers warning).
+  * Fixed CVE-2014-5284. Patch included.
+  * Included debconf and templates for initial package configuration (server_ip).
+
+ -- Santiago Bassett <santiago.bassett@gmail.com>  Sat, 20 Sep 2014 14:52:03 +0000
+
 ossec-hids-agent (2.8-1) stable; urgency=low
 
   * Initial release.
 
- -- Santiago Bassett <santiago.bassett@gmail.com>  Thu, 19 Jun 2014 03:11:44 +0000
+ -- Santiago Bassett <santiago.bassett@gmail.com>  Mon, 24 Mar 2014 23:54:31 +0000

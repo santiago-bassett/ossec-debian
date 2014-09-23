@@ -1,3 +1,11 @@
+ossec-hids (2.8-2) stable; urgency=low
+
+  * Fixed Makefile to use ossec-hids-debian.init instead of ossec-hids.init (fixes LSB headers warning).
+  * Fixed CVE-2014-5284. Patch included.
+  * Included debconf and templates for initial package configuration (email_to, email_from and smtp).
+
+ -- Santiago Bassett <santiago.bassett@gmail.com>  Sat, 20 Sep 2014 14:52:03 +0000
+
 ossec-hids (2.8-1) unstable; urgency=low
 
   * Initial release.
