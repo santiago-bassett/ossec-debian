@@ -16,7 +16,7 @@ There are two different packages that can be built with these files:
 
 Each one of the subdirectories includes:
 
-* Makefile
+* Patches: Including Makefile.patch
 * Debian control files: changelog, compat, control, copyright, lintian-overrides, postinst, postrm, preinst, rules
 
 Additionally a script, ```generate_ossec.sh```, is included to generate the Debian packages for Jessie, Sid and Wheezy Debian distributions, both for i386 and amd64 architectures. This script uses Pbuilder to build the packages, and uploads those to an APT repository, setup with Reprepro.
