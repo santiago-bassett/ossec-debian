@@ -1,7 +1,7 @@
 Template: ossec-hids/email_notification
 Type: select
 Choices: yes, no
-Default: yes
+Default: no
 Description: Enable email notification when an alert is triggered.
 
 Template: ossec-hids/email_to

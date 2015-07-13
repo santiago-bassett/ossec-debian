@@ -1,18 +1,19 @@
-Description: Added Makefile.
-Author: Santiago Bassett <santiago.bassett@gmail.com>
-
----
---- /dev/null
-+++ ossec-hids-2.8/Makefile
-@@ -0,0 +1,65 @@
+Index: ossec-hids-2.8.2/Makefile
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ ossec-hids-2.8.2/Makefile	2015-06-15 03:19:05.619134760 +0000
+@@ -0,0 +1,66 @@
++#
++# Santiago Bassett <santiago.bassett@gmail.com>
++# 06/15/2015
++#
++
 +DESTDIR=/
 +DIR=$(DESTDIR)/var/ossec/
-+DIR_ETC=$(DESTDIR)/etc/
-+DIR_INIT=$(DESTDIR)/etc/init.d/
-+OSSEC_INIT=$(DESTDIR)/etc/ossec-init.conf
++OSSEC_INIT=$(DIR)/etc/ossec-init.conf
 +
 +all:
-+	(cd src; make all; make build)	
++	(cd src; make all; make build)
 +
 +clean:
 +	rm bin/* || /bin/true
@@ -30,10 +31,8 @@ Author: Santiago Bassett <santiago.bassett@gmail.com>
 +	rm -f src/isbigendian
 +
 +install:
-+	mkdir -p $(DIR_ETC)
-+	mkdir -p $(DIR_INIT)
 +	mkdir -p $(DIR)
-+	(cd $(DIR); mkdir -p logs logs/archives logs/alerts logs/firewall bin stats rules queue queue/alerts queue/ossec queue/fts queue/syscheck queue/rootcheck queue/diff queue/agent-info queue/agentless queue/rids tmp var var/run etc etc/shared active-response active-response/bin agentless .ssh)
++	(cd $(DIR); mkdir -p logs logs/archives logs/alerts logs/firewall bin stats rules queue queue/alerts queue/ossec queue/fts queue/syscheck queue/rootcheck queue/diff queue/agent-info queue/agentless queue/rids tmp var var/run etc etc/init.d etc/shared active-response active-response/bin agentless .ssh)
 +	cp -pr etc/rules/* $(DIR)/rules/
 +	chmod -x $(DIR)/rules/*.xml
 +	chmod -x $(DIR)/rules/log-entries/*
@@ -65,8 +64,8 @@ Author: Santiago Bassett <santiago.bassett@gmail.com>
 +	chmod -x $(DIR)/etc/shared/*.txt
 +	cp -p active-response/*.sh $(DIR)/active-response/bin/
 +	cp -p active-response/firewalls/*.sh $(DIR)/active-response/bin/
-+	cp -p src/init/ossec-hids-debian.init $(DIR_INIT)/ossec
++	cp -p src/init/ossec-hids-debian.init $(DIR)/etc/init.d/ossec
 +	echo "DIRECTORY=\"/var/ossec\"" > $(OSSEC_INIT)
-+	echo "VERSION=\"v2.8\"" >> $(OSSEC_INIT)
++	echo "VERSION=\"v2.8.2\"" >> $(OSSEC_INIT)
 +	echo "DATE=\"`date`\"" >> $(OSSEC_INIT)
 +	echo "TYPE=\"server\"" >> $(OSSEC_INIT)

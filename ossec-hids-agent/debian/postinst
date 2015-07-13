@@ -22,11 +22,11 @@ case "$1" in
 
         if ! getent group | grep -q "^ossec"
         then
-            groupadd --system ossec
+            addgroup --system ossec
         fi
         if ! getent passwd | grep -q "^ossec"
         then
-            useradd -d ${DIR} -s ${OSMYSHELL} -g ${GROUP} ${USER}
+            adduser --system --no-create-home --shell ${OSMYSHELL} --ingroup ${GROUP} ${USER}
         fi
 
 	# Default for all directories
@@ -73,12 +73,12 @@ case "$1" in
 
 	chmod 550 ${DIR}/etc
 	chmod 440 ${DIR}/etc/internal_options.conf
-	chmod 440 ${DIR}/etc/local_internal_options.conf >/dev/null 2>&1 || true
+	chmod 660 ${DIR}/etc/local_internal_options.conf >/dev/null 2>&1 || true
 	chmod 440 ${DIR}/etc/client.keys >/dev/null 2>&1 || true
 	chmod 550 ${DIR}/agentless/*
 	chmod 700 ${DIR}/.ssh
 	chmod 770 ${DIR}/etc/shared
-	chmod 440 ${DIR}/etc/shared/*
+	chmod 660 ${DIR}/etc/shared/*
 
 	# For the /var/run
 	chmod 770 ${DIR}/var/run
@@ -96,12 +96,12 @@ case "$1" in
 
 	# For ossec.conf
         chown root:${GROUP} ${DIR}/etc/ossec.conf
-        chmod 440 ${DIR}/etc/ossec.conf
+        chmod 660 ${DIR}/etc/ossec.conf
 
 	# Debconf
 	. /usr/share/debconf/confmodule
 	db_input high ossec-hids-agent/server-ip || true
-	db_go || true
+	db_go
 
 	db_get ossec-hids-agent/server-ip
 	SERVER_IP=$RET
@@ -109,11 +109,28 @@ case "$1" in
 	sed -i "s/<server-ip>[^<]\+<\/server-ip>/<server-ip>${SERVER_IP}<\/server-ip>/" ${DIR}/etc/ossec.conf
 	db_stop
 
+        # ossec-init.conf
+        if [ -e ${DIR}/etc/ossec-init.conf ] && [ -d /etc/ ]; then
+            if [ -e /etc/ossec-init.conf ]; then
+                rm -f /etc/ossec-init.conf
+            fi
+            ln -s ${DIR}/etc/ossec-init.conf /etc/ossec-init.conf
+        fi
+
+        # init.d/ossec file
+        if [ -x ${DIR}/etc/init.d/ossec ] && [ -d /etc/init.d/ ]; then
+            if [ -e /etc/init.d/ossec ]; then
+                rm -f /etc/init.d/ossec
+            fi
+            ln -s ${DIR}/etc/init.d/ossec /etc/init.d/ossec
+        fi
+
 	# Service
 	if [ -x /etc/init.d/ossec ]; then
 	    update-rc.d -f ossec defaults
 	fi
 
+	# Delete tmp directory
 	if [ -d ${OSSEC_HIDS_TMP_DIR} ]; then
 	    rm -r ${OSSEC_HIDS_TMP_DIR}
 	fi

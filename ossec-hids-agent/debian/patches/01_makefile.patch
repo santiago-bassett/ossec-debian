@@ -1,24 +1,20 @@
-Description: Added Makefile
-Author: Santiago Bassett <santiago.bassett@gmail.com>
-
----
---- /dev/null
-+++ ossec-hids-agent-2.8/Makefile
-@@ -0,0 +1,58 @@
+Index: ossec-hids-agent-2.8.2/Makefile
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ ossec-hids-agent-2.8.2/Makefile	2015-06-15 03:15:51.083134760 +0000
+@@ -0,0 +1,54 @@
 +#
 +# Santiago Bassett <santiago.bassett@gmail.com>
-+# 03/25/2014
++# 06/15/2015
 +#
 +
 +DESTDIR=/
 +DIR=$(DESTDIR)/var/ossec/
-+DIR_ETC=$(DESTDIR)/etc/
-+DIR_INIT=$(DESTDIR)/etc/init.d/
-+OSSEC_INIT=$(DESTDIR)/etc/ossec-init.conf
++OSSEC_INIT=$(DIR)/etc/ossec-init.conf
 +CEXTRA="-DCLIENT"
 +all:
 +	echo "CEXTRA=$(CEXTRA)" >> src/Config.OS
-+	(cd src; make all)	
++	(cd src; make all)
 +
 +clean:
 +	rm bin/* || /bin/true
@@ -33,12 +29,9 @@ Author: Santiago Bassett <santiago.bassett@gmail.com>
 +	rm -f src/isbigendian
 +
 +install:
-+	mkdir -p $(DIR_ETC)
-+	mkdir -p $(DIR_INIT)
-+	cp -p src/init/ossec-hids-debian.init $(DIR_INIT)/ossec
 +	mkdir -p $(DIR)
-+	(cd $(DIR); mkdir -p logs bin queue queue/ossec queue/alerts queue/syscheck queue/diff queue/rids) 
-+	(cd $(DIR); mkdir -p var var/run etc etc/shared active-response active-response/bin agentless .ssh)
++	(cd $(DIR); mkdir -p logs bin queue queue/ossec queue/alerts queue/syscheck queue/diff queue/rids)
++	(cd $(DIR); mkdir -p var var/run etc etc/init.d etc/shared active-response active-response/bin agentless .ssh)
 +	cp -pr src/rootcheck/db/*.txt $(DIR)/etc/shared/
 +	chmod -x $(DIR)/etc/shared/*.txt
 +	cp -pr etc/internal_options.conf $(DIR)/etc/
@@ -59,7 +52,8 @@ Author: Santiago Bassett <santiago.bassett@gmail.com>
 +	cp -pr active-response/firewalls/*.sh ${DIR}/active-response/bin/
 +	cp -pr etc/ossec-agent.conf $(DIR)/etc/ossec.conf
 +	chmod -x $(DIR)/etc/ossec.conf
++	cp -p src/init/ossec-hids-debian.init $(DIR)/etc/init.d/ossec
 +	echo "DIRECTORY=\"/var/ossec\"" > $(OSSEC_INIT)
-+	echo "VERSION=\"v2.8\"" >> $(OSSEC_INIT)
++	echo "VERSION=\"v2.8.2\"" >> $(OSSEC_INIT)
 +	echo "DATE=\"`date`\"" >> $(OSSEC_INIT)
 +	echo "TYPE=\"agent\"" >> $(OSSEC_INIT)
