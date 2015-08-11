@@ -2,7 +2,7 @@ Source: ossec-hids
 Section: admin 
 Priority: extra
 Maintainer: Santiago Bassett <santiago.bassett@gmail.com>
-Build-Depends: debhelper (>= 7.0.50~), libssl-dev
+Build-Depends: debhelper (>= 7.0.50~), libssl-dev, linux-libc-dev
 Standards-Version: 3.8.4
 Homepage: http://www.ossec.net
 

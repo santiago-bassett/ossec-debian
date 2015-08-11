@@ -1,8 +1,8 @@
 Index: ossec-hids-2.8.2/Makefile
 ===================================================================
 --- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ ossec-hids-2.8.2/Makefile	2015-06-15 03:19:05.619134760 +0000
-@@ -0,0 +1,66 @@
++++ ossec-hids-2.8.2/Makefile	2015-08-10 04:36:27.819134760 +0000
+@@ -0,0 +1,72 @@
 +#
 +# Santiago Bassett <santiago.bassett@gmail.com>
 +# 06/15/2015
@@ -13,6 +13,7 @@ Index: ossec-hids-2.8.2/Makefile
 +OSSEC_INIT=$(DIR)/etc/ossec-init.conf
 +
 +all:
++	echo "HEXTRA=-DMAX_AGENTS=16384" >> src/Config.OS
 +	(cd src; make all; make build)
 +
 +clean:
@@ -32,13 +33,18 @@ Index: ossec-hids-2.8.2/Makefile
 +
 +install:
 +	mkdir -p $(DIR)
-+	(cd $(DIR); mkdir -p logs logs/archives logs/alerts logs/firewall bin stats rules queue queue/alerts queue/ossec queue/fts queue/syscheck queue/rootcheck queue/diff queue/agent-info queue/agentless queue/rids tmp var var/run etc etc/init.d etc/shared active-response active-response/bin agentless .ssh)
++	(cd $(DIR); mkdir -p logs logs/archives logs/alerts logs/firewall bin stats rules queue queue/alerts queue/ossec queue/fts queue/syscheck queue/rootcheck queue/diff queue/agent-info queue/agentless queue/rids tmp var var/run etc etc/init.d etc/shared active-response active-response/bin agentless .ssh contrib)
 +	cp -pr etc/rules/* $(DIR)/rules/
 +	chmod -x $(DIR)/rules/*.xml
 +	chmod -x $(DIR)/rules/log-entries/*
 +	chmod -x $(DIR)/rules/translated/pure_ftpd/*.xml
 +	cp -pL /etc/localtime $(DIR)/etc/ 2>/dev/null || /bin/true
 +	cp -p /etc/TIMEZONE $(DIR)/etc/   2>/dev/null || /bin/true
++	cp -p contrib/compile_alerts.pl $(DIR)/contrib/
++	cp -p contrib/compile_alerts.txt $(DIR)/contrib/
++	cp -p contrib/config2xml $(DIR)/contrib/
++	cp -p contrib/ossec-batch-manager.pl $(DIR)/contrib/
++	cp -p contrib/ossec-eps.sh $(DIR)/contrib/
 +	cp -pr bin/ossec* $(DIR)/bin/
 +	cp -pr bin/manage_agents $(DIR)/bin/
 +	cp -pr bin/syscheck_update $(DIR)/bin/

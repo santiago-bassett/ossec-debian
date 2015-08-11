@@ -26,7 +26,7 @@ case "$1" in
         fi
         if ! getent passwd | grep -q "^ossec"
         then
-            adduser --system --no-create-home --shell ${OSMYSHELL} --ingroup ${GROUP} ${USER}
+            adduser --system --home ${DIR} --shell ${OSMYSHELL} --ingroup ${GROUP} ${USER} > /dev/null 2>&1
         fi
 
 	# Default for all directories

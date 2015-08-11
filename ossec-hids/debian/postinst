@@ -26,15 +26,15 @@ case "$1" in
         fi
         if ! getent passwd | grep -q "^ossec"
         then
-            adduser --system --no-create-home --shell ${OSMYSHELL} --ingroup ${GROUP} ${USER}
+            adduser --system --home ${DIR} --shell ${OSMYSHELL} --ingroup ${GROUP} ${USER} > /dev/null 2>&1
         fi
         if ! getent passwd | grep -q "^ossecm"
         then
-            adduser --system --no-create-home --shell ${OSMYSHELL} --ingroup ${GROUP} ${USER_MAIL}
+            adduser --system --home ${DIR} --shell ${OSMYSHELL} --ingroup ${GROUP} ${USER_MAIL} > /dev/null 2>&1
         fi
         if ! getent passwd | grep -q "^ossecr"
         then
-            adduser --system --no-create-home --shell ${OSMYSHELL} --ingroup ${GROUP} ${USER_REM}
+            adduser --system --home ${DIR} --shell ${OSMYSHELL} --ingroup ${GROUP} ${USER_REM} > /dev/null 2>&1
         fi
 
 	# Default for all directories
@@ -149,6 +149,9 @@ case "$1" in
 	chmod 550 ${DIR}/bin/*
 	chown root:${GROUP} ${DIR}/etc/ossec.conf
 	chmod 660 ${DIR}/etc/ossec.conf
+
+	# Sticky bit for /var/ossec/tmp
+	chmod +t ${DIR}/tmp	
 
 	# Debconf
 	. /usr/share/debconf/confmodule
